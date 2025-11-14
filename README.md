@@ -1,4 +1,4 @@
-# BeerMax Mini App Platform
+# BearMax Mini App Platform
 
 - **API** – FastAPI-сервис c PostgreSQL/Redis, репозиториями и сервисами для справочников, форм и каталога фондов.
 - **Bot** – Go-бот на основе официального клиента MAX (`max-bot-api-client-go`), который приветствует пользователя и отправляет ссылку на мини‑приложение.
