@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 FROM node:20-alpine
 
 WORKDIR /app/apps/web
@@ -5,10 +6,14 @@ WORKDIR /app/apps/web
 ENV NODE_ENV=development \
     WEB_PORT=3000 \
     VITE_API_BASE_URL=http://api:8000/api/v1 \
-    VITE_DEFAULT_ACCOUNT_ID=1
+    VITE_DEFAULT_ACCOUNT_ID=1 \
+    NPM_CONFIG_FUND=false \
+    NPM_CONFIG_AUDIT=false
 
 COPY apps/web/package*.json ./
-RUN npm install
+
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --prefer-offline --no-progress
 
 COPY apps/web .
 
