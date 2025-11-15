@@ -1,8 +1,5 @@
 
 https://{$BACKMAX_DOMAIN} {
-        handle_path /api/* {
-                reverse_proxy {$BACKMAX_API_UPSTREAM:http://localhost:8000}
-        }
         reverse_proxy * {$BACKMAX_UPSTREAM:http://localhost:3000}
 }
 

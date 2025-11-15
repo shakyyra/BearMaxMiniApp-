@@ -7,7 +7,29 @@ import type {
   MentorshipRequestPayload,
 } from "../types/api";
 
-const DEFAULT_API_BASE_URL = "http://localhost:8000/api/v1";
+const LOCAL_API_BASE_URL = "http://localhost:8000/api/v1";
+
+function resolveDefaultApiBaseUrl(): string {
+  if (typeof window === "undefined") {
+    return LOCAL_API_BASE_URL;
+  }
+
+  const { hostname, origin } = window.location;
+  const isLocalhost =
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname.endsWith(".local") ||
+    hostname.startsWith("192.168.") ||
+    hostname.startsWith("10.");
+
+  if (isLocalhost) {
+    return LOCAL_API_BASE_URL;
+  }
+
+  return `${origin.replace(/\/$/, "")}/api/v1`;
+}
+
+const DEFAULT_API_BASE_URL = resolveDefaultApiBaseUrl();
 
 const API_BASE_URL = (import.meta.env?.VITE_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/$/, "");
 
@@ -26,7 +48,6 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       const errorBody = await response.json();
       errorMessage = errorBody?.message || errorBody?.detail || errorMessage;
     } catch {
-      // ignore JSON parse errors
     }
     throw new Error(errorMessage);
   }
